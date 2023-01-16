@@ -1,6 +1,8 @@
 import './style.css';
 import fetchImages from './fetch-images';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -55,6 +57,12 @@ function renderCardImg(arr) {
     return markup;
 }
 
+let lightbox = new SimpleLightbox('.photo-card a', {
+    captions: true,
+    captionsDare: 'alt',
+    captionsDelay: 250,
+});
+
 let currentPage = 1;
 let currentHits = 0;
 let searchQuery = '';
@@ -84,7 +92,7 @@ async function onSubmit(evt) {
             Notify.success(`Hooray! We found ${response.totalHits} images.`);
             gallery.innerHTML = '';
             renderCardImg(response.hits);
-          
+            lightbox.refresh();
             endCollectionText.classList.add('is-hidden');
         }
         if (response.totalHits === 0) {
@@ -105,7 +113,7 @@ async function onClickLoadMoreBtn() {
   currentPage += 1;
   const response = await fetchImages(searchQuery, currentPage);
   renderCardImg(response.hits);
-  
+  lightbox.refresh();
   currentHits += response.hits.length;
 
   if (currentHits === response.totalHits) {
