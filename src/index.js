@@ -7,6 +7,17 @@ const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const endCollectionText = document.querySelector('.end-collection-text');
 
+
+// const galleryFull = fetchImages.map(element => {
+//     return `<li><img src=${element} alt=${element} width="100px" height="100px"></li>`;
+// });
+// const galleryString = galleryFull.join("");
+// console.log(galleryString);
+
+// const galleryMarkup = document.querySelector('.gallery');
+// galleryMarkup.insertAdjacentHTML('afterbegin', galleryFull.join(""));
+
+
 function renderCardImg(arr) {
     const markup = arr.map(({
         webformatURL,
