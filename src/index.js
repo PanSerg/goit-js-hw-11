@@ -10,16 +10,14 @@ const loadMoreBtn = document.querySelector('.load-more');
 const endCollectionText = document.querySelector('.end-collection-text');
 
 
-const galleryFull = fetchImages(element => {
-  return `<li><img src=${element} alt=${element} width="100px" height="100px"></li>`;
-});
 const galleryString = galleryFull;
 console.log(galleryString);
-const galleryMarkup = document.querySelector('.gallery');
+
+const galleryMarkup = document.querySelector('.gallery-full');
 
 
 function renderCardImg(arr) {
-    galleryMarkup.insertAdjacentHTML('afterbegin', galleryFull);
+    galleryMarkup.insertAdjacentHTML('beforeend', '<h1>Gallery</h1>');
     const markup = arr.map(({
         webformatURL,
         largeImageURL,
