@@ -5,44 +5,38 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('#search-form');
-const gallery = document.querySelector('.gallery');
+const galleryRef = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const endCollectionText = document.querySelector('.end-collection-text');
 
-
-const galleryString = galleryFull;
-console.log(galleryString);
-
-const galleryMarkup = document.querySelector('.gallery-full');
-
-
 function renderCardImg(arr) {
-    galleryMarkup.insertAdjacentHTML('beforeend', '<h1>Gallery</h1>');
-    const markup = arr.map(({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads
-    }) => {
+    const markup = arr
+        .map(
+        ({
+            webformatURL,
+            largeImageURL,
+            tags,
+            likes,
+            views,
+            comments,
+            downloads
+        }) => {
         return `<div class='photo-card'>
                     <a href='${largeImageURL}'>
                         <img src=${webformatURL}' alt='${tags}' loading='lazy' />
                     </a>
                     <div class='info'>
                         <p class='info-item'>
-                             <b>Likes</b>
-                                ${likes}
+                            <b>Likes</b>
+                            ${likes}
                         </p>
                         <p class='info-item'>
                             <b>Views</b>
-                             ${views}
+                            ${views}
                         </p>
                         <p class='info-item'>
-                             <b>Comments</b>
-                                ${comments}
+                            <b>Comments</b>
+                            ${comments}
                         </p>
                         <p class='info-item'>
                             <b>Downloads</b>
@@ -50,14 +44,15 @@ function renderCardImg(arr) {
                         </p>
                     </div>
                 </div>`;
-    }).join('');
+            }).join('');
+    galleryRef.insertAdjacentHTML('beforeend', markup);
     return markup;
 }
 
 let lightbox = new SimpleLightbox('.photo-card a', {
     captions: true,
     captionsDare: 'alt',
-    captionsDelay: 250,
+    captionsDelay: 250
 });
 
 let currentPage = 1;
@@ -70,6 +65,8 @@ async function onSubmit(evt) {
     evt.preventDefault();
     searchQuery = evt.currentTarget.searchQuery.value;
     currentPage = 1;
+
+    galleryRef.innerHTML = '';
 
     if (searchQuery === '') {
         return;
@@ -87,13 +84,12 @@ async function onSubmit(evt) {
     try {
         if (response.totalHits > 0) {
             Notify.success(`Hooray! We found ${response.totalHits} images.`);
-            gallery.innerHTML = '';
             renderCardImg(response.hits);
             lightbox.refresh();
             endCollectionText.classList.add('is-hidden');
         }
+
         if (response.totalHits === 0) {
-            gallery.innerHTML = '';
             Notify.failure(
                 'Sorry, there are no images matching your search query. Please try again.');
                 loadMoreBtn.classList.add('is-hidden');
@@ -118,7 +114,3 @@ async function onClickLoadMoreBtn() {
     endCollectionText.classList.remove('is-hidden');
   }
 }
-
-    
-
-
