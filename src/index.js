@@ -63,7 +63,7 @@ searchForm.addEventListener('submit', onSubmit);
 
 async function onSubmit(evt) {
     evt.preventDefault();
-    searchQuery = evt.currentTarget.searchQuery.value;
+    searchQuery = evt.currentTarget.searchQuery.value.trim();
     currentPage = 1;
 
     galleryRef.innerHTML = '';
@@ -72,37 +72,39 @@ async function onSubmit(evt) {
         return;
     }
 
-    const response = await fetchImages(searchQuery, currentPage);
-    currentHits = response.hits.length;
-
-    if (response.totalHits > 40) {
-        loadMoreBtn.classList.remove('is-hidden');
-    } else {
-        loadMoreBtn.classList.add('is-hidden');
-    }
-
     try {
-        if (response.totalHits > 0) {
-            Notify.success(`Hooray! We found ${response.totalHits} images.`);
-            renderCardImg(response.hits);
-            lightbox.refresh();
-            endCollectionText.classList.add('is-hidden');
-        }
+      const response = await fetchImages(searchQuery, currentPage);
+      currentHits = response.hits.length;
 
-        if (response.totalHits === 0) {
-            Notify.failure(
-                'Sorry, there are no images matching your search query. Please try again.');
-                loadMoreBtn.classList.add('is-hidden');
-                endCollectionText.classList.add('is-hidden');
-        }
+      if (response.totalHits > 40) {
+        loadMoreBtn.classList.remove('is-hidden');
+      } else {
+        loadMoreBtn.classList.add('is-hidden');
+      }
+
+      if (response.totalHits > 0) {
+        Notify.success(`Hooray! We found ${response.totalHits} images.`);
+        renderCardImg(response.hits);
+        lightbox.refresh();
+        endCollectionText.classList.add('is-hidden');
+      }
+
+      if (response.totalHits === 0) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+        loadMoreBtn.classList.add('is-hidden');
+        endCollectionText.classList.add('is-hidden');
+      }
     } catch (error) {
-        console.log(error);
+        console.log('Sorry, please check back later.');
     }
 }
 
 loadMoreBtn.addEventListener('click', onClickLoadMoreBtn);
 
 async function onClickLoadMoreBtn() {
+    try {
   currentPage += 1;
   const response = await fetchImages(searchQuery, currentPage);
   renderCardImg(response.hits);
@@ -112,5 +114,8 @@ async function onClickLoadMoreBtn() {
   if (currentHits === response.totalHits) {
     loadMoreBtn.classList.add('is-hidden');
     endCollectionText.classList.remove('is-hidden');
-  }
+        }
+    } catch (error) {
+        console.log('Sorry, not loading at the moment');
+        }
 }
