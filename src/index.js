@@ -46,7 +46,6 @@ function renderCardImg(arr) {
                 </div>`;
             }).join('');
     galleryRef.insertAdjacentHTML('beforeend', markup);
-    return markup;
 }
 
 let lightbox = new SimpleLightbox('.photo-card a', {
@@ -68,7 +67,7 @@ async function onSubmit(evt) {
 
     galleryRef.innerHTML = '';
 
-    if (searchQuery === '') {
+    if (!searchQuery) {
         return;
     }
 
@@ -86,7 +85,6 @@ async function onSubmit(evt) {
         Notify.success(`Hooray! We found ${response.totalHits} images.`);
         renderCardImg(response.hits);
         lightbox.refresh();
-        endCollectionText.classList.add('is-hidden');
       }
 
       if (response.totalHits === 0) {
@@ -94,12 +92,13 @@ async function onSubmit(evt) {
           'Sorry, there are no images matching your search query. Please try again.'
         );
         loadMoreBtn.classList.add('is-hidden');
-        endCollectionText.classList.add('is-hidden');
       }
     } catch (error) {
-        console.log('Sorry, please check back later.');
+        // alert(`Sorry, please check back later.`);
+        console.log(error);
     }
 }
+
 
 loadMoreBtn.addEventListener('click', onClickLoadMoreBtn);
 
@@ -113,9 +112,8 @@ async function onClickLoadMoreBtn() {
 
   if (currentHits === response.totalHits) {
     loadMoreBtn.classList.add('is-hidden');
-    endCollectionText.classList.remove('is-hidden');
         }
     } catch (error) {
-        console.log('Sorry, not loading at the moment');
+        alert(`Sorry, not loading at the moment`);
         }
 }
